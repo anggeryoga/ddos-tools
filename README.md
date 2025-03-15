@@ -9,6 +9,6 @@
 
 ## Installation:
 ```bash
-git clone https://github.com/XX3T1/ddos-tool.git
-cd ddos-tool
+git clone https://github.com/anggeryoga/ddos-tools.git
+cd ddos-tools
 bash install.sh
