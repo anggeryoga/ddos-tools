@@ -7,7 +7,7 @@ pkg update
 pkg install -y python
 
 # Instal dependensi Python menggunakan pip
-pip install requests colorama
+pip install requests colorama urllib3
 
 # Konfirmasi Instalasi
 echo "Semua dependensi telah diinstal."
